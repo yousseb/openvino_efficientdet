@@ -128,7 +128,7 @@ jobs:
         path: |
           efficientdet-d0-FP16/efficientdet-d0.bin
           efficientdet-d0-FP16/efficientdet-d0.xml
-          efficientdet-d0-FP32/efficientdet-d0.xml
+          efficientdet-d0-FP32/efficientdet-d0.bin
           efficientdet-d0-FP32/efficientdet-d0.xml
 
     - uses: actions/upload-artifact@v2
