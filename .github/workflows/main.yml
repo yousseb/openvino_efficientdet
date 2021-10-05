@@ -73,7 +73,7 @@ jobs:
         export MO_DIR=/opt/intel/openvino_2021/deployment_tools/model_optimizer/
 
         versions=(d0 d4)
-        sizes=(512 1024)
+        sizes=(256 1024)
         for (( i=0; i<2; i++ )); do
           version=${versions[$i]}
           size=${sizes[$i]}
