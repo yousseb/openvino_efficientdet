@@ -84,6 +84,8 @@ jobs:
             --input_shape "[1, ${size}, ${size}, 3]" \
             --model_name efficientdet-${version} \
             --disable_fusing \
+            --disable_gfusing \
+            --keep_shape_ops \
             --output_dir efficientdet-${version}-FP32 --data_type FP32
 
           python3 $MO_DIR/mo.py \
@@ -92,6 +94,8 @@ jobs:
             --input_shape "[1, ${size}, ${size}, 3]" \
             --model_name efficientdet-${version} \
             --disable_fusing \
+            --disable_gfusing \
+            --keep_shape_ops \
             --output_dir efficientdet-${version}-FP16 --data_type FP16
         done
 
