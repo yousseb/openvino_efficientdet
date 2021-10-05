@@ -80,6 +80,22 @@ jobs:
         source /opt/intel/openvino_2021/bin/setupvars.sh
         export MO_DIR=/opt/intel/openvino_2021/deployment_tools/model_optimizer/
 
+        echo "-------- Create efficientdet-d0-256 FP32 IR --------"    
+        python3 $MO_DIR/mo.py \
+          --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
+          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
+          --input_shape "[1, 256, 256, 3]" \
+          --model_name efficientdet-d0 \
+          --output_dir efficientdet-d0-FP32-256 --data_type FP32
+
+        echo "-------- Create efficientdet-d0-256 FP16 IR --------"            
+        python3 $MO_DIR/mo.py \
+          --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
+          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
+          --input_shape "[1, 256, 256, 3]" \
+          --model_name efficientdet-d0 \
+          --output_dir efficientdet-d0-FP16-256 --data_type FP16
+
         versions=(d0 d4)
         sizes=(512 1024)
         for (( i=0; i<2; i++ )); do
@@ -103,21 +119,6 @@ jobs:
             --output_dir efficientdet-${version}-FP16 --data_type FP16
         done
 
-        echo "-------- Create efficientdet-d0-256 FP32 IR --------"    
-        python3 $MO_DIR/mo.py \
-          --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
-          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-          --input_shape "[1, 256, 256, 3]" \
-          --model_name efficientdet-d0 \
-          --output_dir efficientdet-d0-FP32-256 --data_type FP32
-
-        echo "-------- Create efficientdet-d0-256 FP16 IR --------"            
-        python3 $MO_DIR/mo.py \
-          --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
-          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-          --input_shape "[1, 256, 256, 3]" \
-          --model_name efficientdet-d0 \
-          --output_dir efficientdet-d0-FP16-256 --data_type FP16
 
     - name: Validate IR
       run: |
