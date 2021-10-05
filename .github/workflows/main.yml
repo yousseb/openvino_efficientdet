@@ -83,6 +83,7 @@ jobs:
             --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
             --input_shape "[1, ${size}, ${size}, 3]" \
             --model_name efficientdet-${version} \
+            --disable_fusing \
             --output_dir efficientdet-${version}-FP32 --data_type FP32
 
           python3 $MO_DIR/mo.py \
@@ -90,6 +91,7 @@ jobs:
             --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
             --input_shape "[1, ${size}, ${size}, 3]" \
             --model_name efficientdet-${version} \
+            --disable_fusing \
             --output_dir efficientdet-${version}-FP16 --data_type FP16
         done
 
