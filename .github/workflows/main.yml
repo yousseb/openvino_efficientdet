@@ -65,6 +65,12 @@ jobs:
             --ckpt_path=efficientdet-${version} \
             --saved_model_dir=savedmodeldir-${version}
         done
+        python3 model_inspect.py \
+          --runmode=saved_model \
+          --model_name=efficientdet-d0  \
+          --ckpt_path=efficientdet-d0 \
+          --saved_model_dir=savedmodeldir-d0-256 \
+          --hparams="image_size=256x256"
 
     - name: Create IR
       run: |
@@ -73,7 +79,7 @@ jobs:
         export MO_DIR=/opt/intel/openvino_2021/deployment_tools/model_optimizer/
 
         versions=(d0 d4)
-        sizes=(256 1024)
+        sizes=(512 1024)
         for (( i=0; i<2; i++ )); do
           version=${versions[$i]}
           size=${sizes[$i]}
