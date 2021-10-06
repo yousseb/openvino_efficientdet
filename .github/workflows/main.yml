@@ -86,6 +86,7 @@ jobs:
           --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
           --input_shape "[1, 256, 256, 3]" \
           --model_name efficientdet-d0 \
+          --reverse_input_channels \
           --output_dir efficientdet-d0-FP32-256 --data_type FP32
 
         echo "-------- Create efficientdet-d0-256 FP16 IR --------"            
@@ -94,6 +95,7 @@ jobs:
           --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
           --input_shape "[1, 256, 256, 3]" \
           --model_name efficientdet-d0 \
+          --reverse_input_channels \
           --output_dir efficientdet-d0-FP16-256 --data_type FP16
 
         versions=(d0 d4)
@@ -108,6 +110,7 @@ jobs:
             --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
             --input_shape "[1, ${size}, ${size}, 3]" \
             --model_name efficientdet-${version} \
+            --reverse_input_channels \
             --output_dir efficientdet-${version}-FP32 --data_type FP32
 
           echo "-------- Create efficientdet-${version} FP16 IR --------"
@@ -116,6 +119,7 @@ jobs:
             --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
             --input_shape "[1, ${size}, ${size}, 3]" \
             --model_name efficientdet-${version} \
+            --reverse_input_channels \
             --output_dir efficientdet-${version}-FP16 --data_type FP16
         done
 
