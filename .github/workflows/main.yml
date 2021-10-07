@@ -73,6 +73,13 @@ jobs:
           --ckpt_path=efficientdet-d0 \
           --saved_model_dir=savedmodeldir-d0-256 \
           --hparams="image_size=256x256"
+        echo "----------- Freezing: efficientdet-d0 512x256 -----------"
+        python3 model_inspect.py \
+          --runmode=saved_model \
+          --model_name=efficientdet-d0  \
+          --ckpt_path=efficientdet-d0 \
+          --saved_model_dir=savedmodeldir-d0-512x256 \
+          --hparams="image_size=512x256"          
 
     - name: Create IR
       run: |
@@ -80,7 +87,7 @@ jobs:
         source /opt/intel/openvino_2021/bin/setupvars.sh
         export MO_DIR=/opt/intel/openvino_2021/deployment_tools/model_optimizer/
 
-        echo "-------- Create efficientdet-d0-256 FP32 IR --------"    
+        echo "-------- Create efficientdet-d0-256x256 FP32 IR --------"    
         python3 $MO_DIR/mo.py \
           --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
           --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
@@ -89,7 +96,7 @@ jobs:
           --reverse_input_channels \
           --output_dir efficientdet-d0-FP32-256 --data_type FP32
 
-        echo "-------- Create efficientdet-d0-256 FP16 IR --------"            
+        echo "-------- Create efficientdet-d0-256x256 FP16 IR --------"            
         python3 $MO_DIR/mo.py \
           --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
           --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
@@ -97,6 +104,24 @@ jobs:
           --model_name efficientdet-d0 \
           --reverse_input_channels \
           --output_dir efficientdet-d0-FP16-256 --data_type FP16
+
+        echo "-------- Create efficientdet-d0-512x256 FP32 IR --------"
+        python3 $MO_DIR/mo.py \
+          --input_model automl/efficientdet/savedmodeldir-d0-512x256/efficientdet-d0_frozen.pb \
+          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
+          --input_shape "[1, 512, 256, 3]" \
+          --model_name efficientdet-d0 \
+          --reverse_input_channels \
+          --output_dir efficientdet-d0-FP32-512x256 --data_type FP32
+
+        echo "-------- Create efficientdet-d0-512x256 FP16 IR --------"            
+        python3 $MO_DIR/mo.py \
+          --input_model automl/efficientdet/savedmodeldir-d0-512x256/efficientdet-d0_frozen.pb \
+          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
+          --input_shape "[1, 512, 256, 3]" \
+          --model_name efficientdet-d0 \
+          --reverse_input_channels \
+          --output_dir efficientdet-d0-FP16-512x256 --data_type FP16
 
         versions=(d0 d4)
         sizes=(512 1024)
