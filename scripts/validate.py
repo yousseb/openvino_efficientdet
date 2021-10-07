@@ -44,8 +44,9 @@ with tf.compat.v1.Session() as sess:
             means = struct.unpack('fff', node.attr['value'].tensor.tensor_content)
             print('Mean values are', [m * 255 for m in means])
 
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     tfOut = sess.run(sess.graph.get_tensor_by_name('detections:0'),
-                     feed_dict={'image_arrays:0': np.expand_dims(img, axis=0)})
+                     feed_dict={'image_arrays:0': np.expand_dims(img_rgb, axis=0)})
 
 #
 # Run OpenVINO
