@@ -66,62 +66,26 @@ jobs:
             --ckpt_path=efficientdet-${version} \
             --saved_model_dir=savedmodeldir-${version}
         done
-        echo "----------- Freezing: efficientdet-d0 256x256 -----------"
-        python3 model_inspect.py \
-          --runmode=saved_model \
-          --model_name=efficientdet-d0  \
-          --ckpt_path=efficientdet-d0 \
-          --saved_model_dir=savedmodeldir-d0-256 \
-          --hparams="image_size=256x256"
-        echo "----------- Freezing: efficientdet-d0 384 -----------"
-        python3 model_inspect.py \
-          --runmode=saved_model \
-          --model_name=efficientdet-d0  \
-          --ckpt_path=efficientdet-d0 \
-          --saved_model_dir=savedmodeldir-d0-384 \
-          --hparams="image_size=384x384"          
+        #echo "----------- Freezing: efficientdet-d0 256x256 -----------"
+        #python3 model_inspect.py \
+        #  --runmode=saved_model \
+        #  --model_name=efficientdet-d0  \
+        #  --ckpt_path=efficientdet-d0 \
+        #  --saved_model_dir=savedmodeldir-d0-256 \
+        #  --hparams="image_size=256x256"
+        #echo "----------- Freezing: efficientdet-d0 384 -----------"
+        #python3 model_inspect.py \
+        #  --runmode=saved_model \
+        #  --model_name=efficientdet-d0  \
+        #  --ckpt_path=efficientdet-d0 \
+        #  --saved_model_dir=savedmodeldir-d0-384 \
+        #  --hparams="image_size=384x384"          
 
     - name: Create IR
       run: |
         python3 -m pip install networkx defusedxml test-generator===0.1.1
         source /opt/intel/openvino_2021/bin/setupvars.sh
         export MO_DIR=/opt/intel/openvino_2021/deployment_tools/model_optimizer/
-
-        echo "-------- Create efficientdet-d0-256x256 FP32 IR --------"    
-        python3 $MO_DIR/mo.py \
-          --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
-          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-          --input_shape "[1, 256, 256, 3]" \
-          --model_name efficientdet-d0 \
-          --reverse_input_channels \
-          --output_dir efficientdet-d0-FP32-256x256 --data_type FP32
-
-        echo "-------- Create efficientdet-d0-256x256 FP16 IR --------"            
-        python3 $MO_DIR/mo.py \
-          --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
-          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-          --input_shape "[1, 256, 256, 3]" \
-          --model_name efficientdet-d0 \
-          --reverse_input_channels \
-          --output_dir efficientdet-d0-FP16-256x256 --data_type FP16
-
-        echo "-------- Create efficientdet-d0-384x384 FP32 IR --------"
-        python3 $MO_DIR/mo.py \
-          --input_model automl/efficientdet/savedmodeldir-d0-384/efficientdet-d0_frozen.pb \
-          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-          --input_shape "[1, 384, 384, 3]" \
-          --model_name efficientdet-d0 \
-          --reverse_input_channels \
-          --output_dir efficientdet-d0-FP32-384x384 --data_type FP32
-
-        echo "-------- Create efficientdet-d0-384x384 FP16 IR --------"            
-        python3 $MO_DIR/mo.py \
-          --input_model automl/efficientdet/savedmodeldir-d0-384/efficientdet-d0_frozen.pb \
-          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-          --input_shape "[1, 384, 384, 3]" \
-          --model_name efficientdet-d0 \
-          --reverse_input_channels \
-          --output_dir efficientdet-d0-FP16-384x384 --data_type FP16
 
         versions=(d0 d4)
         sizes=(512 1024)
@@ -162,7 +126,7 @@ jobs:
           echo "-------- Validate efficientdet-${version} FP32 IR --------"
           ln -sf efficientdet-${version}-FP32/efficientdet-${version}.bin ./efficientdet-${version}.bin
           ln -sf efficientdet-${version}-FP32/efficientdet-${version}.xml ./efficientdet-${version}.xml
-          #python3 scripts/validate.py --version ${version} --width ${size} --height ${size} 2>&1
+          python3 scripts/validate.py --version ${version} --width ${size} --height ${size} 2>&1
 
           rm -f ./efficientdet-${version}.xml
           rm -f ./efficientdet-${version}.bin
@@ -170,7 +134,7 @@ jobs:
           echo "-------- Validate efficientdet-${version} FP16 IR --------"
           ln -sf efficientdet-${version}-FP16/efficientdet-${version}.bin ./efficientdet-${version}.bin
           ln -sf efficientdet-${version}-FP16/efficientdet-${version}.xml ./efficientdet-${version}.xml
-          #python3 scripts/validate.py --version ${version} --width ${size} --height ${size} --fp16
+          python3 scripts/validate.py --version ${version} --width ${size} --height ${size} --fp16
           
           rm -f ./efficientdet-${version}.xml
           rm -f ./efficientdet-${version}.bin
@@ -181,18 +145,11 @@ jobs:
         name: efficientdet-d0
         path: |
           efficientdet-d0-FP16/*.*
-          efficientdet-d0-FP32/efficientdet-d0.bin
-          efficientdet-d0-FP32/efficientdet-d0.xml
-          efficientdet-d0-FP32-256/efficientdet-d0.xml
-          efficientdet-d0-FP32-256/efficientdet-d0.bin
-          efficientdet-d0-FP16-256/efficientdet-d0.xml
-          efficientdet-d0-FP16-256/efficientdet-d0.bin          
+          efficientdet-d0-FP32/*.*
 
     - uses: actions/upload-artifact@v2
       with:
         name: efficientdet-d4
         path: |
-          efficientdet-d4-FP16/efficientdet-d4.bin
-          efficientdet-d4-FP16/efficientdet-d4.xml
-          efficientdet-d4-FP32/efficientdet-d4.bin
-          efficientdet-d4-FP32/efficientdet-d4.xml
+          efficientdet-d4-FP16/*.*
+          efficientdet-d4-FP32/*.*
