@@ -86,31 +86,40 @@ jobs:
         python3 -m pip install networkx defusedxml test-generator===0.1.1
         source /opt/intel/openvino_2021/bin/setupvars.sh
         export MO_DIR=/opt/intel/openvino_2021/deployment_tools/model_optimizer/
+        echo "-------- Create efficientdet-${version} FP16 IR --------"
+        
+        python3 $MO_DIR/mo.py \
+          --input_model automl/efficientdet/savedmodeldir-${version}/efficientdet-${version}_frozen.pb \
+          --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
+          --input_shape "[1, 256, 512, 3]" \
+          --model_name savedmodeldir-d0-256 \
+          --reverse_input_channels \
+          --output_dir efficientdet-d0-FP16 --data_type FP16
 
-        versions=(d0 d4)
-        sizes=(512 1024)
-        for (( i=0; i<2; i++ )); do
-          version=${versions[$i]}
-          size=${sizes[$i]}
-          
-          echo "-------- Create efficientdet-${version} FP32 IR --------"
-          python3 $MO_DIR/mo.py \
-            --input_model automl/efficientdet/savedmodeldir-${version}/efficientdet-${version}_frozen.pb \
-            --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-            --input_shape "[1, ${size}, ${size}, 3]" \
-            --model_name efficientdet-${version} \
-            --reverse_input_channels \
-            --output_dir efficientdet-${version}-FP32 --data_type FP32
-
-          echo "-------- Create efficientdet-${version} FP16 IR --------"
-          python3 $MO_DIR/mo.py \
-            --input_model automl/efficientdet/savedmodeldir-${version}/efficientdet-${version}_frozen.pb \
-            --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
-            --input_shape "[1, ${size}, ${size}, 3]" \
-            --model_name efficientdet-${version} \
-            --reverse_input_channels \
-            --output_dir efficientdet-${version}-FP16 --data_type FP16
-        done
+        #versions=(d0 d4)
+        #sizes=(512 1024)
+        #for (( i=0; i<2; i++ )); do
+        #  version=${versions[$i]}
+        #  size=${sizes[$i]}
+        #  
+        #  echo "-------- Create efficientdet-${version} FP32 IR --------"
+        #  python3 $MO_DIR/mo.py \
+        #    --input_model automl/efficientdet/savedmodeldir-${version}/efficientdet-${version}_frozen.pb \
+        #    --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
+        #    --input_shape "[1, ${size}, ${size}, 3]" \
+        #    --model_name efficientdet-${version} \
+        #    --reverse_input_channels \
+        #    --output_dir efficientdet-${version}-FP32 --data_type FP32
+        #
+        #  echo "-------- Create efficientdet-${version} FP16 IR --------"
+        #  python3 $MO_DIR/mo.py \
+        #    --input_model automl/efficientdet/savedmodeldir-${version}/efficientdet-${version}_frozen.pb \
+        #    --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
+        #    --input_shape "[1, ${size}, ${size}, 3]" \
+        #    --model_name efficientdet-${version} \
+        #    --reverse_input_channels \
+        #    --output_dir efficientdet-${version}-FP16 --data_type FP16
+        #done
 
 
     - name: Validate IR
