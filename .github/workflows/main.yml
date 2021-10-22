@@ -89,7 +89,7 @@ jobs:
         echo "-------- Create efficientdet-${version} FP16 IR --------"
         
         python3 $MO_DIR/mo.py \
-          --input_model automl/efficientdet/savedmodeldir-d0/efficientdet-d0_frozen.pb \
+          --input_model automl/efficientdet/savedmodeldir-d0-256/efficientdet-d0_frozen.pb \
           --transformations_config $MO_DIR/extensions/front/tf/automl_efficientdet.json \
           --input_shape "[1, 256, 512, 3]" \
           --model_name savedmodeldir-d0-256 \
