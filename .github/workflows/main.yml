@@ -126,35 +126,35 @@ jobs:
       run: |
         source /opt/intel/openvino_2021/bin/setupvars.sh
 
-        versions=(d0 d4)
-        sizes=(512 1024)
-        for (( i=0; i<2; i++ )); do
-          version=${versions[$i]}
-          size=${sizes[$i]}
+        #versions=(d0 d4)
+        #sizes=(512 1024)
+        #for (( i=0; i<2; i++ )); do
+        #  version=${versions[$i]}
+        #  size=${sizes[$i]}
+       
+        #  echo "-------- Validate efficientdet-${version} FP32 IR --------"
+        #  ln -sf efficientdet-${version}-FP32/efficientdet-${version}.bin ./efficientdet-${version}.bin
+        #  ln -sf efficientdet-${version}-FP32/efficientdet-${version}.xml ./efficientdet-${version}.xml
+        #  python3 scripts/validate.py --version ${version} --width ${size} --height ${size} 2>&1
 
-          echo "-------- Validate efficientdet-${version} FP32 IR --------"
-          ln -sf efficientdet-${version}-FP32/efficientdet-${version}.bin ./efficientdet-${version}.bin
-          ln -sf efficientdet-${version}-FP32/efficientdet-${version}.xml ./efficientdet-${version}.xml
-          python3 scripts/validate.py --version ${version} --width ${size} --height ${size} 2>&1
-
-          rm -f ./efficientdet-${version}.xml
-          rm -f ./efficientdet-${version}.bin
+        #  rm -f ./efficientdet-${version}.xml
+        #  rm -f ./efficientdet-${version}.bin
           
-          echo "-------- Validate efficientdet-${version} FP16 IR --------"
-          ln -sf efficientdet-${version}-FP16/efficientdet-${version}.bin ./efficientdet-${version}.bin
-          ln -sf efficientdet-${version}-FP16/efficientdet-${version}.xml ./efficientdet-${version}.xml
-          python3 scripts/validate.py --version ${version} --width ${size} --height ${size} --fp16
-          
-          rm -f ./efficientdet-${version}.xml
-          rm -f ./efficientdet-${version}.bin
-        done
+        #  echo "-------- Validate efficientdet-${version} FP16 IR --------"
+        #  ln -sf efficientdet-${version}-FP16/efficientdet-${version}.bin ./efficientdet-${version}.bin
+        #  ln -sf efficientdet-${version}-FP16/efficientdet-${version}.xml ./efficientdet-${version}.xml
+        #  python3 scripts/validate.py --version ${version} --width ${size} --height ${size} --fp16
+        #  
+        #  rm -f ./efficientdet-${version}.xml
+        #  rm -f ./efficientdet-${version}.bin
+        #done
         
     - uses: actions/upload-artifact@v2
       with:
         name: efficientdet-d0
         path: |
           efficientdet-d0-FP16/*.*
-          efficientdet-d0-FP32/*.*
+          #efficientdet-d0-FP32/*.*
 
     - uses: actions/upload-artifact@v2
       with:
