@@ -58,21 +58,21 @@ jobs:
     - name: Freeze graph
       run: |
         cd automl/efficientdet
-        for version in d0 d4; do
-          echo "----------- Freezing: efficientdet-${version} -----------"
-          python3 model_inspect.py \
-            --runmode=saved_model \
-            --model_name=efficientdet-${version}  \
-            --ckpt_path=efficientdet-${version} \
-            --saved_model_dir=savedmodeldir-${version}
-        done
+        #for version in d0 d4; do
+        #  echo "----------- Freezing: efficientdet-${version} -----------"
+        #  python3 model_inspect.py \
+        #    --runmode=saved_model \
+        #    --model_name=efficientdet-${version}  \
+        #    --ckpt_path=efficientdet-${version} \
+        #    --saved_model_dir=savedmodeldir-${version}
+        #done
         #echo "----------- Freezing: efficientdet-d0 256x256 -----------"
-        #python3 model_inspect.py \
-        #  --runmode=saved_model \
-        #  --model_name=efficientdet-d0  \
-        #  --ckpt_path=efficientdet-d0 \
-        #  --saved_model_dir=savedmodeldir-d0-256 \
-        #  --hparams="image_size=256x256"
+        python3 model_inspect.py \
+          --runmode=saved_model \
+          --model_name=efficientdet-d0  \
+          --ckpt_path=efficientdet-d0 \
+          --saved_model_dir=savedmodeldir-d0-256 \
+          --hparams="image_size=512x256"
         #echo "----------- Freezing: efficientdet-d0 384 -----------"
         #python3 model_inspect.py \
         #  --runmode=saved_model \
